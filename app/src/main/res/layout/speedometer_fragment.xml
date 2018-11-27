@@ -5,9 +5,27 @@
     android:layout_height="match_parent"
     tools:context=".SpeedometerFragment">
 
-    <TextView
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="TODO Speedometer here" />
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:context=".SpeedometerFragment">
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.github.anastr.speedviewlib.ProgressiveGauge
+            android:id="@+id/speedometerGauge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:sv_lowSpeedPercent="10"
+            app:sv_maxSpeed="220"
+            app:sv_mediumSpeedPercent="25"
+            app:sv_orientation="HORIZONTAL"
+            app:sv_speedometerBackColor="@android:color/darker_gray"
+            app:sv_speedometerColor="@color/colorPrimary"
+            app:sv_withTremble="false" />
+    </LinearLayout>
 </FrameLayout>
