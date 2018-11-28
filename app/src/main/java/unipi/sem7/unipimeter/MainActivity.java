@@ -29,6 +29,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 
 import unipi.sem7.unipimeter.dummy.DummyContent.DummyItem;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public SpeedometerFragment speedometerFragment;
     private MapView mMapView;
     private LocationManager locationManager;
+    private Marker locationMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +65,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mMapView.setMinZoomLevel(1.4);
         mMapView.setMaxZoomLevel(18.9);
         mMapView.setTilesScaledToDpi(true);
-        mMapView.getController().setZoom(8.0);
+        mMapView.getController().setZoom(18.0);
         mMapView.getController().setCenter(new GeoPoint(37.941649, 23.652894));
+
+        locationMarker = new Marker(mMapView);
+        locationMarker.setPosition(new GeoPoint(37.941649, 23.652894));
+        locationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+        locationMarker.setIcon(getResources().getDrawable(R.drawable.ic_menu_mylocation));
+        locationMarker.setTitle(locationMarker.getPosition().toString().replace(",0.0", ""));
+
+        mMapView.getOverlays().add(locationMarker);
+        //mMapView.invalidate();
+
 
         final ITileSource tileSource = new XYTileSource( "Dark", 1, 18, 256, ".png",
                 new String[] {
@@ -142,7 +154,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-        mMapView.getController().setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+        GeoPoint lgp = new GeoPoint(location.getLatitude(), location.getLongitude());
+        mMapView.getController().setCenter(lgp);
+        locationMarker.setPosition(lgp);
+        locationMarker.setTitle(lgp.toString().replace(",0.0", ""));
         if (location.hasSpeed())
             speedometerFragment.setSpeed(location.getSpeed());
 
