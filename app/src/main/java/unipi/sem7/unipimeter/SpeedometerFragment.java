@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.anastr.speedviewlib.ProgressiveGauge;
+
 public class SpeedometerFragment extends Fragment {
 
     private SpeedometerViewModel mViewModel;
+    private ProgressiveGauge speedometerGauge;
 
     public static SpeedometerFragment newInstance() {
         return new SpeedometerFragment();
@@ -28,6 +31,19 @@ public class SpeedometerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(SpeedometerViewModel.class);
         // TODO: Use the ViewModel
+
+        speedometerGauge = (ProgressiveGauge) getView().findViewById(R.id.speedometerGauge);
+        ((MainActivity) getActivity()).speedometerFragment = this;
+    }
+
+    public void setSpeed(double speed) {
+        if (speedometerGauge != null)
+            speedometerGauge.speedTo((float) speed);
+    }
+
+    public void setVisibility(int visid) {
+        if (speedometerGauge != null)
+            speedometerGauge.setVisibility(visid);
     }
 
 }

@@ -1,11 +1,17 @@
 package unipi.sem7.unipimeter;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -26,11 +32,12 @@ import org.osmdroid.views.MapView;
 
 import unipi.sem7.unipimeter.dummy.DummyContent.DummyItem;
 
-public class MainActivity extends AppCompatActivity implements POIFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LocationListener , POIFragment.OnListFragmentInteractionListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    public ProgressiveGauge speedometerGauge;
+    public SpeedometerFragment speedometerFragment;
     private MapView mMapView;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +74,16 @@ public class MainActivity extends AppCompatActivity implements POIFragment.OnLis
                         "https://d.basemaps.cartocdn.com/dark_all/" });
         mMapView.setTileSource(tileSource);
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        reqGPS();
+
+        speedometerFragment = new SpeedometerFragment(); // temp
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                speedometerGauge = (ProgressiveGauge) findViewById(R.id.speedometerGauge);
-                speedometerGauge.speedTo(44, 2);
+
             }
         });
     }
@@ -102,6 +113,53 @@ public class MainActivity extends AppCompatActivity implements POIFragment.OnLis
     @Override
     public void onListFragmentInteraction(DummyItem item){
         //TODO POI LIST ITEM CLICK
+    }
+
+    public void reqGPS() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED){
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    speedometerFragment.setVisibility(View.VISIBLE);
+                    reqGPS();
+                } else {
+                    speedometerFragment.setVisibility(View.INVISIBLE);
+                }
+                return;
+            }
+            //TODO req other permissions
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mMapView.getController().setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
+        speedometerFragment.setSpeed(location.getLongitude());
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
