@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onLocationChanged(Location location) {
         mMapView.getController().setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
-        speedometerFragment.setSpeed(location.getLongitude());
+        if (location.hasSpeed())
+            speedometerFragment.setSpeed(location.getSpeed());
 
     }
 
