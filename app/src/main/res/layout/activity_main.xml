@@ -8,8 +8,9 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
+        android:id="@+id/TopBar"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -27,22 +28,38 @@
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Speedometer" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="POI" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Statistics" />
+
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings" />
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"/>
+    <include
+        layout="@layout/content_main"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
+
+    <com.github.anastr.speedviewlib.ProgressiveGauge
+        android:id="@+id/speedometerGauge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:sv_lowSpeedPercent="10"
+        app:sv_maxSpeed="220"
+        app:sv_mediumSpeedPercent="25"
+        app:sv_orientation="HORIZONTAL"
+        app:sv_speedometerBackColor="@android:color/darker_gray"
+        app:sv_speedometerColor="@color/colorPrimary"
+        app:sv_withTremble="false" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -50,6 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="?android:attr/actionModeSelectAllDrawable" />
 
 </android.support.design.widget.CoordinatorLayout>

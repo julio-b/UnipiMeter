@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -28,6 +29,8 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
+import org.osmdroid.views.CustomZoomButtonsDisplay;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
@@ -35,11 +38,13 @@ import unipi.sem7.unipimeter.dummy.DummyContent.DummyItem;
 
 public class MainActivity extends AppCompatActivity implements LocationListener , POIFragment.OnListFragmentInteractionListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private AppBarLayout TopBar;
     private ViewPager mViewPager;
-    public SpeedometerFragment speedometerFragment;
+    private ProgressiveGauge speedometerGauge;
     private MapView mMapView;
     private LocationManager locationManager;
     private Marker locationMarker;
+    private int topLayerVisibility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         setContentView(R.layout.activity_main);
+        TopBar = (AppBarLayout) findViewById(R.id.TopBar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         mMapView = (MapView) findViewById(R.id.osmdroid);
+        mMapView.getZoomController().getDisplay().setPositions(true, CustomZoomButtonsDisplay.HorizontalPosition.CENTER, CustomZoomButtonsDisplay.VerticalPosition.TOP);
         mMapView.setMultiTouchControls(true);
         mMapView.setMinZoomLevel(1.4);
         mMapView.setMaxZoomLevel(18.9);
@@ -89,13 +96,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         reqGPS();
 
-        speedometerFragment = new SpeedometerFragment(); // temp
+        speedometerGauge = (ProgressiveGauge) findViewById(R.id.speedometerGauge);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                topLayerVisibility = topLayerVisibility == View.VISIBLE ? View.INVISIBLE : View.VISIBLE;
+                TopBar.setVisibility(topLayerVisibility);
+                mViewPager.setVisibility(topLayerVisibility);
             }
         });
     }
@@ -141,10 +150,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    speedometerFragment.setVisibility(View.VISIBLE);
+                    speedometerGauge.setVisibility(View.VISIBLE);
                     reqGPS();
                 } else {
-                    speedometerFragment.setVisibility(View.INVISIBLE);
+                    speedometerGauge.setVisibility(View.INVISIBLE);
                 }
                 return;
             }
@@ -159,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         locationMarker.setPosition(lgp);
         locationMarker.setTitle(lgp.toString().replace(",0.0", ""));
         if (location.hasSpeed())
-            speedometerFragment.setSpeed(location.getSpeed());
+            speedometerGauge.speedTo(location.getSpeed());
 
     }
 
@@ -187,11 +196,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return SpeedometerFragment.newInstance();
+                    return POIFragment.newInstance(1);
                 case 1:
                     return POIFragment.newInstance(1);
                 default:
-                    return SpeedometerFragment.newInstance();
+                    return POIFragment.newInstance(1);
             }
         }
 
