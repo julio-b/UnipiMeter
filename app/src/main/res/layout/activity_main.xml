@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -55,11 +54,49 @@
         android:layout_gravity="bottom|end"
         app:sv_lowSpeedPercent="10"
         app:sv_maxSpeed="220"
+        app:sv_speedTextPosition="RIGHT"
         app:sv_mediumSpeedPercent="25"
         app:sv_orientation="HORIZONTAL"
         app:sv_speedometerBackColor="@android:color/darker_gray"
         app:sv_speedometerColor="@color/colorPrimary"
         app:sv_withTremble="false" />
+
+    <TextView
+        android:id="@+id/speedlimitText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="monospace"
+        android:text="Speedlimit 40.2"
+        android:textColor="#ff0008"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/speedlimitBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="0dp"
+        android:max="220000"
+        android:progress="40200"
+        android:padding="0dp"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp"
+        android:progressDrawable="@drawable/seekbar_style"
+        android:thumb="@drawable/seekbar_line_thumb" />
 
     <include layout="@layout/content_main" />
 
@@ -69,6 +106,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@+id/osmdroid"
+        app:layout_anchorGravity="right|center"
         app:srcCompat="?android:attr/actionModeSelectAllDrawable" />
+
 
 </android.support.design.widget.CoordinatorLayout>

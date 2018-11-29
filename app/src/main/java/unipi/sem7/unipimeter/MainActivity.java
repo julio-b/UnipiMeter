@@ -22,6 +22,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.github.anastr.speedviewlib.ProgressiveGauge;
 
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private MapView mMapView;
     private LocationManager locationManager;
     private Marker locationMarker;
+    private SeekBar speedlimitBar;
+    private float speedlimit = 40.2f;
     private int topLayerVisibility;
 
     @Override
@@ -96,6 +100,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         reqGPS();
 
         speedometerGauge = (ProgressiveGauge) findViewById(R.id.speedometerGauge);
+
+        speedlimitBar = (SeekBar) findViewById(R.id.speedlimitBar);
+        speedlimitBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                speedlimit = speedlimitBar.getProgress() * 1.0f / 1000;
+                ((TextView) findViewById(R.id.speedlimitText)).setText("Speedlimit " + speedlimit);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -166,9 +183,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mMapView.getController().setCenter(lgp);
         locationMarker.setPosition(lgp);
         locationMarker.setTitle(lgp.toString().replace(",0.0", ""));
-        if (location.hasSpeed())
+        if (location.hasSpeed()) {
             speedometerGauge.speedTo(location.getSpeed());
-
+            if (location.getSpeed() > speedlimit) {
+                //TODO insert to db
+            }
+        }
     }
 
     @Override
