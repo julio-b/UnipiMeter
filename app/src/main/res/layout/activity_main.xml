@@ -7,6 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <org.osmdroid.views.MapView
+        android:id="@+id/osmdroid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/TopBar"
         android:layout_width="match_parent"
@@ -43,11 +48,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/content_main"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
-
     <com.github.anastr.speedviewlib.ProgressiveGauge
         android:id="@+id/speedometerGauge"
         android:layout_width="wrap_content"
@@ -60,6 +60,8 @@
         app:sv_speedometerBackColor="@android:color/darker_gray"
         app:sv_speedometerColor="@color/colorPrimary"
         app:sv_withTremble="false" />
+
+    <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
