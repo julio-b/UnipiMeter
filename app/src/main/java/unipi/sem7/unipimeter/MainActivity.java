@@ -34,7 +34,6 @@ import org.osmdroid.views.CustomZoomButtonsDisplay;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
-import unipi.sem7.unipimeter.dummy.DummyContent.DummyItem;
 
 public class MainActivity extends AppCompatActivity implements LocationListener , POIFragment.OnListFragmentInteractionListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @Override
-    public void onListFragmentInteraction(DummyItem item){
+    public void onListFragmentInteraction(POI poi){
         //TODO POI LIST ITEM CLICK
     }
 
@@ -196,11 +195,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return POIFragment.newInstance(1);
+                    return POIFragment.newInstance();
                 case 1:
-                    return POIFragment.newInstance(1);
+                    return POIFragment.newInstance();
                 default:
-                    return POIFragment.newInstance(1);
+                    return POIFragment.newInstance();
             }
         }
 
