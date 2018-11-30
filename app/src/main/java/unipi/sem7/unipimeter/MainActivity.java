@@ -254,8 +254,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             if (distanceM >= poi.location.distanceTo(location)) {
                 if (marker.getSubDescription() != "In range") {
                     marker.setSubDescription("In range");
-
-                    //TODO save event
+                    // save POI approaching event and show a message
+                    ((EventApproachingPOIDoa) AppDatabase.getDatabase(getApplicationContext()).approachingPOIDoa()).insertApproachingPOI(
+                            new EventApproachingPOI(poi.id, location)
+                    );
+                    Snackbar.make(findViewById(R.id.osmdroid), "Close to " + poi.title, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
             } else {
                 marker.setSubDescription("");

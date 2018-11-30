@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 public abstract class AppDatabase extends RoomDatabase {
     public abstract POIDao poiDao();
     public abstract EventOverSpeedDao overspeedDao();
+    public abstract EventApproachingPOIDoa approachingPOIDoa();
 
     private static volatile AppDatabase INSTANCE;
 
@@ -47,10 +48,12 @@ public abstract class AppDatabase extends RoomDatabase {
 
         private final POIDao poiDao;
         private final EventOverSpeedDao overSpeedDao;
+        private final EventApproachingPOIDoa approachingPOIDoa;
 
         PopulateDbAsync(AppDatabase db) {
             poiDao = db.poiDao();
             overSpeedDao = db.overspeedDao();
+            approachingPOIDoa = db.approachingPOIDoa();
         }
 
         @Override
@@ -69,6 +72,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
             EventOverSpeed eos = new EventOverSpeed(30.2f, 23.3f, 38.006490, 23.632007); overSpeedDao.insertOverSpeed(eos);
             eos = new EventOverSpeed(70.2f, 60.3f, 38.006490, 23.632007); overSpeedDao.insertOverSpeed(eos);
+
+            EventApproachingPOI eap = new EventApproachingPOI(1, 37.921649, 23.622894); approachingPOIDoa.insertApproachingPOI(eap);
+            eap = new EventApproachingPOI(2, 37.944038, 23.735553); approachingPOIDoa.insertApproachingPOI(eap);
             return null;
         }
     }
