@@ -53,18 +53,18 @@ public abstract class AppDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            POI p = new POI();
-            p.title = "Test POI";
-            p.category = "Cat 1";
-            p.description = "description qeqeweqwq";
-            p.location = new Location("db");
-            p.location.setLatitude(0);
-            p.location.setLongitude(0);
-            poiDao.insertPOIs(p, p);
-            p.category = "Caet 2";
-            p.location.setLongitude(12.22);
-            p.location.setLatitude(33.666);
-            poiDao.insertPOIs(p, p);
+            POI p = new POI("Unipi", 37.941649, 23.652894, "University", "Papei"); poiDao.insertPOI(p);
+            p = new POI("ASOEE", 37.994038, 23.732553, "University", "<Papei"); poiDao.insertPOI(p);
+            p = new POI("EKPA", 37.967739, 23.782904, "University", "<Papei"); poiDao.insertPOI(p);
+
+            p = new POI("Test poi", 37.933398, 23.722775, "Test", "random map point"); poiDao.insertPOI(p);
+            p = new POI("Test poi 2", 38.026490, 23.662007, "Test", "random map point"); poiDao.insertPOI(p);
+            p = new POI("Test poi 3", 38.117362, 23.900809, "Test", "random map point"); poiDao.insertPOI(p);
+            p = new POI("Test poi 4", 37.846763, 23.556971, "Test", "random map point"); poiDao.insertPOI(p);
+
+            p = new POI("Acropoli", 37.971515, 23.725824, "Museum", "Description here"); poiDao.insertPOI(p);
+            p = new POI("Pasalimani", 37.937287, 23.648512, "Port", "Description here"); poiDao.insertPOI(p);
+
             return null;
         }
     }

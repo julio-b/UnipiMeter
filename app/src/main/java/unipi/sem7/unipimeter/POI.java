@@ -18,4 +18,17 @@ public class POI {
     public String category;
 
     public Location location;
+
+    public POI(String title, String description, String  category, Location location) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.location = location;
+    }
+
+    public POI(String title, double lat, double lon, String category, String description) {
+        this(title, description, category, new Location("db"));
+        this.location.setLatitude(lat);
+        this.location.setLongitude(lon);
+    }
 }

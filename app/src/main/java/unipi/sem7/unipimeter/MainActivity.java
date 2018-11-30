@@ -1,14 +1,17 @@
 package unipi.sem7.unipimeter;
 
 import android.Manifest;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,6 +31,7 @@ import android.widget.TextView;
 
 import com.github.anastr.speedviewlib.ProgressiveGauge;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -38,6 +42,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polygon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -103,6 +108,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mMapView.getOverlays().add(locationMarker);
         //mMapView.invalidate();
 
+        POIDao poiDao = (POIDao) AppDatabase.getDatabase(getApplicationContext()).poiDao();
+        poiDao.getAllPOIs().observe(this, new Observer<List<POI>>() {
+            @Override
+            public void onChanged(@Nullable final List<POI> pois) {
+                mapRenderPOIs(pois);
+            }
+        });
 
         final ITileSource tileSource = new XYTileSource( "Dark", 1, 18, 256, ".png",
                 new String[] {
@@ -264,6 +276,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         public int getCount() {
             return 2;
         }
+    }
+
+    public void mapRenderPOIs(List<POI> pois) {
+        ArrayList<Marker> newMarkers = new ArrayList<Marker>();
+        for (POI poi : pois) {
+            Marker mpoi = new Marker(mMapView);
+            mpoi.setPosition(new GeoPoint(poi.location.getLatitude(), poi.location.getLongitude()));
+            mpoi.setIcon(getResources().getDrawable(R.drawable.marker_default));
+            mpoi.setAnchor(0.18f, 0.19f);
+            mpoi.setInfoWindowAnchor(0.18f, 0.0f);
+            mpoi.setTitle(String.format("%s\n%.5f | %.5f", poi.title, poi.location.getLatitude(), poi.location.getLongitude()));
+            mpoi.setSubDescription("Description: " + poi.description + poi.category);
+
+            newMarkers.add(mpoi);
+        }
+        mMapView.getOverlayManager().addAll(newMarkers);
     }
 
 }
