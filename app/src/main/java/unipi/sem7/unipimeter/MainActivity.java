@@ -43,7 +43,9 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polygon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements LocationListener , POIFragment.OnListFragmentInteractionListener {
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private ProgressiveGauge speedometerGauge;
     private MapView mMapView;
     private LocationManager locationManager;
+    private Map<POI, Marker> POIMarkers;
     private Marker locationMarker;
     private Polygon circle;
     private SeekBar distanceMBar;
@@ -116,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 mapRenderPOIs(pois);
             }
         });
+        POIMarkers = new HashMap<POI, Marker>();
 
         final ITileSource tileSource = new XYTileSource( "Dark", 1, 18, 256, ".png",
                 new String[] {
@@ -244,6 +248,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
             ospeedflag = location.getSpeed() > speedlimit;
         }
+        for (Map.Entry<POI, Marker> entry : POIMarkers.entrySet()) {
+            POI poi = entry.getKey();
+            Marker marker = entry.getValue();
+            if (distanceM >= poi.location.distanceTo(location)) {
+                if (marker.getSubDescription() != "In range") {
+                    marker.setSubDescription("In range");
+
+                    //TODO save event
+                }
+            } else {
+                marker.setSubDescription("");
+            }
+            if (marker.isInfoWindowShown()) {
+                marker.closeInfoWindow();
+                marker.showInfoWindow();
+            }
+        }
     }
 
     @Override
@@ -295,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             mpoi.setTitle(String.format("%s\n%.5f | %.5f", poi.title, poi.location.getLatitude(), poi.location.getLongitude()));
             mpoi.setSubDescription("Description: " + poi.description + poi.category);
 
+            POIMarkers.put(poi, mpoi);
             newMarkers.add(mpoi);
         }
         mMapView.getOverlayManager().addAll(newMarkers);
