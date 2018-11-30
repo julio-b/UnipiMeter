@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private LocationManager locationManager;
     private Marker locationMarker;
     private Polygon circle;
+    private SeekBar distanceMBar;
     private double distanceM = 300f;
     private SeekBar speedlimitBar;
     private float speedlimit = 40.2f;
@@ -89,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         locationMarker.setIcon(getResources().getDrawable(R.drawable.ic_menu_mylocation));
         locationMarker.setAnchor(0.18f, 0.19f);
         locationMarker.setInfoWindowAnchor(0.18f, 0.0f);
-        locationMarker.setTitle(locationMarker.getPosition().toString().replace(",0.0", ""));
+        locationMarker.setTitle(String.format("%.5f | %.5f", locationMarker.getPosition().getLatitude(), locationMarker.getPosition().getLongitude()));
+        locationMarker.setSubDescription("Range: " + (int) distanceM + "m");
 
         circle = new Polygon();
         circle.setTitle("POI Range");
@@ -112,6 +114,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         reqGPS();
+
+        distanceMBar = (SeekBar) findViewById(R.id.distanceSeekBar);
+        distanceMBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                distanceM = distanceMBar.getProgress();
+                locationMarker.setSubDescription("Range: " + distanceM);
+                circle.setPoints(Polygon.pointsAsCircle(locationMarker.getPosition(), distanceM));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                if (!locationMarker.isInfoWindowShown())
+                    locationMarker.showInfoWindow();
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (locationMarker.isInfoWindowShown())
+                    locationMarker.closeInfoWindow();
+            }
+        });
 
         speedometerGauge = (ProgressiveGauge) findViewById(R.id.speedometerGauge);
 
@@ -196,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         GeoPoint lgp = new GeoPoint(location.getLatitude(), location.getLongitude());
         mMapView.getController().setCenter(lgp);
         locationMarker.setPosition(lgp);
-        locationMarker.setTitle(lgp.toString().replace(",0.0", ""));
+        locationMarker.setTitle(String.format("%.5f | %.5f", lgp.getLatitude(), lgp.getLongitude()));
         circle.setPoints(Polygon.pointsAsCircle(lgp, distanceM));
         if (location.hasSpeed()) {
             speedometerGauge.speedTo(location.getSpeed());

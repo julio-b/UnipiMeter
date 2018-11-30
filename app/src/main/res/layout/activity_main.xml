@@ -98,6 +98,21 @@
         android:progressDrawable="@drawable/seekbar_style"
         android:thumb="@drawable/seekbar_line_thumb" />
 
+    <SeekBar
+        android:id="@+id/distanceSeekBar"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp"
+        android:max="7000"
+        android:min="200"
+        android:progress="600"
+        android:rotation="270"
+        android:progressBackgroundTint="@color/colorPrimaryDark"
+        android:progressTint="@color/colorPrimary"
+        android:thumbTint="@color/colorPrimary"
+        app:layout_anchor="@+id/fab"
+        app:layout_anchorGravity="center" />
+
     <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
