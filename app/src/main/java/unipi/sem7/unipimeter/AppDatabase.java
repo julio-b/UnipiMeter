@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {POI.class, EventApproachingPOI.class, EventOverSpeed.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract POIDao poiDao();
-    //todo
+    public abstract EventOverSpeedDao overspeedDao();
 
     private static volatile AppDatabase INSTANCE;
 
@@ -46,9 +46,11 @@ public abstract class AppDatabase extends RoomDatabase {
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
         private final POIDao poiDao;
+        private final EventOverSpeedDao overSpeedDao;
 
         PopulateDbAsync(AppDatabase db) {
             poiDao = db.poiDao();
+            overSpeedDao = db.overspeedDao();
         }
 
         @Override
@@ -65,6 +67,8 @@ public abstract class AppDatabase extends RoomDatabase {
             p = new POI("Acropoli", 37.971515, 23.725824, "Museum", "Description here"); poiDao.insertPOI(p);
             p = new POI("Pasalimani", 37.937287, 23.648512, "Port", "Description here"); poiDao.insertPOI(p);
 
+            EventOverSpeed eos = new EventOverSpeed(30.2f, 23.3f, 38.006490, 23.632007); overSpeedDao.insertOverSpeed(eos);
+            eos = new EventOverSpeed(70.2f, 60.3f, 38.006490, 23.632007); overSpeedDao.insertOverSpeed(eos);
             return null;
         }
     }

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private double distanceM = 300f;
     private SeekBar speedlimitBar;
     private float speedlimit = 40.2f;
+    private boolean ospeedflag = false;
     private int topLayerVisibility;
 
     @Override
@@ -234,9 +235,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         circle.setPoints(Polygon.pointsAsCircle(lgp, distanceM));
         if (location.hasSpeed()) {
             speedometerGauge.speedTo(location.getSpeed());
-            if (location.getSpeed() > speedlimit) {
-                //TODO insert to db
+            // save overspeed event only once
+            if (!ospeedflag && location.getSpeed() > speedlimit) {
+                ((EventOverSpeedDao) AppDatabase.getDatabase(getApplicationContext()).overspeedDao()).insertOverSpeed(
+                        new EventOverSpeed(location.getSpeed(), speedlimit, location)
+                );
             }
+
+            ospeedflag = location.getSpeed() > speedlimit;
         }
     }
 
