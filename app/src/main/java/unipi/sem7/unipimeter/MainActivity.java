@@ -3,6 +3,7 @@ package unipi.sem7.unipimeter;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -35,6 +36,9 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.CustomZoomButtonsDisplay;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polygon;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements LocationListener , POIFragment.OnListFragmentInteractionListener {
@@ -45,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private MapView mMapView;
     private LocationManager locationManager;
     private Marker locationMarker;
+    private Polygon circle;
+    private double distanceM = 300f;
     private SeekBar speedlimitBar;
     private float speedlimit = 40.2f;
     private int topLayerVisibility;
@@ -80,10 +86,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         locationMarker = new Marker(mMapView);
         locationMarker.setPosition(new GeoPoint(37.941649, 23.652894));
-        locationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         locationMarker.setIcon(getResources().getDrawable(R.drawable.ic_menu_mylocation));
+        locationMarker.setAnchor(0.18f, 0.19f);
+        locationMarker.setInfoWindowAnchor(0.18f, 0.0f);
         locationMarker.setTitle(locationMarker.getPosition().toString().replace(",0.0", ""));
 
+        circle = new Polygon();
+        circle.setTitle("POI Range");
+        circle.setPoints(Polygon.pointsAsCircle(new GeoPoint(37.941649, 23.652894), distanceM));
+        circle.setFillColor(Color.argb(11, 0,255,255));
+        circle.setStrokeColor(Color.argb(0,0,0,0));
+
+        mMapView.getOverlayManager().add(circle);
         mMapView.getOverlays().add(locationMarker);
         //mMapView.invalidate();
 
@@ -183,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mMapView.getController().setCenter(lgp);
         locationMarker.setPosition(lgp);
         locationMarker.setTitle(lgp.toString().replace(",0.0", ""));
+        circle.setPoints(Polygon.pointsAsCircle(lgp, distanceM));
         if (location.hasSpeed()) {
             speedometerGauge.speedTo(location.getSpeed());
             if (location.getSpeed() > speedlimit) {
