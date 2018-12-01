@@ -20,15 +20,28 @@ public class EventsFragment extends Fragment {
     private OnOsListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
 
+    private static final String ARG_EVENT_TYPE = "event";
+    private String eventType = "OverSpeed";
+
     public EventsFragment() {
         // Required empty public constructor
     }
 
-    public static EventsFragment newInstance() {
+    public static EventsFragment newInstance(String eventType) {
         EventsFragment fragment = new EventsFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_EVENT_TYPE, eventType);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle saveInstanceState) {
+        super.onCreate(saveInstanceState);
+
+        if (getArguments() != null) {
+            eventType = getArguments().getString(ARG_EVENT_TYPE);
+        }
     }
 
     @Override
@@ -43,13 +56,24 @@ public class EventsFragment extends Fragment {
             recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            EventOverSpeedDao eosdao = (EventOverSpeedDao) AppDatabase.getDatabase(getActivity().getApplicationContext()).overspeedDao();
-            eosdao.getAllOverSpeed().observe(this, new Observer<List<EventOverSpeed>>() {
-                @Override
-                public void onChanged(@Nullable final List<EventOverSpeed> eos) {
-                    recyclerView.setAdapter( new EventOverSpeedViewAdapter(eos, mListener));
-                }
-            });
+            if (eventType.equals("OverSpeed")) {
+                EventOverSpeedDao eosdao = (EventOverSpeedDao) AppDatabase.getDatabase(getActivity().getApplicationContext()).overspeedDao();
+                eosdao.getAllOverSpeed().observe(this, new Observer<List<EventOverSpeed>>() {
+                    @Override
+                    public void onChanged(@Nullable final List<EventOverSpeed> eos) {
+                        recyclerView.setAdapter( new EventOverSpeedViewAdapter(eos, mListener));
+                    }
+                });
+            } else {
+                EventApproachingPOIDoa eapdao = (EventApproachingPOIDoa) AppDatabase.getDatabase(getActivity().getApplicationContext()).approachingPOIDoa();
+                eapdao.getAllApproachingPOIJoined().observe(this, new Observer<List<EventApproachingPOIDoa.EventApproachingPOIjoined>>() {
+                    @Override
+                    public void onChanged(@Nullable final List<EventApproachingPOIDoa.EventApproachingPOIjoined> eapjpoi) {
+                        recyclerView.setAdapter( new EventApproachingPOIViewAdapter(eapjpoi, mListener));
+                    }
+                });
+            }
+
         }
 
         return view;
@@ -74,5 +98,6 @@ public class EventsFragment extends Fragment {
 
     public interface OnOsListFragmentInteractionListener {
         void onEosListFragmentInteraction(EventOverSpeed eos);
+        void onEapListFragmentIntercation(EventApproachingPOI eap);
     }
 }

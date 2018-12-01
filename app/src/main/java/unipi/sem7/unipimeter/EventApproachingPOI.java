@@ -1,5 +1,7 @@
 package unipi.sem7.unipimeter;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
@@ -16,10 +18,12 @@ import java.util.Date;
 @TypeConverters({DateConverter.class, LocationConverter.class})
 public class EventApproachingPOI {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "eap_id")
     public int id;
 
     public int poiId;
 
+    @ColumnInfo(name = "eap_loc")
     public Location location;
 
     public Date date;
@@ -41,5 +45,4 @@ public class EventApproachingPOI {
         this(poiId, location, new Date());
     }
 }
-
 

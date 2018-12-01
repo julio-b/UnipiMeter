@@ -254,6 +254,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         //TODO overspeed item click
     }
 
+    @Override
+    public void onEapListFragmentIntercation(EventApproachingPOI eap) {
+        //TODO
+    }
+
     public void reqGPS() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED){
@@ -346,7 +351,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 case 0:
                     return POIFragment.newInstance();
                 case 1:
-                    return EventsFragment.newInstance();
+                    return EventsFragment.newInstance("ApproachingPOI");
+                case 2:
+                    return EventsFragment.newInstance("OverSpeed");
                 default:
                     return POIFragment.newInstance();
             }
@@ -354,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 
