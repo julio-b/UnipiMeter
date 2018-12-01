@@ -30,6 +30,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.anastr.speedviewlib.ProgressiveGauge;
+import com.github.anastr.speedviewlib.Speedometer;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
@@ -157,11 +158,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         speedometerGauge = (ProgressiveGauge) findViewById(R.id.speedometerGauge);
 
         speedlimitBar = (SeekBar) findViewById(R.id.speedlimitBar);
+        ((ProgressiveGauge) findViewById(R.id.speedometerLimitGauge)).speedTo(speedlimitBar.getProgress() * 1.0f / 1000, 0);
         speedlimitBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 speedlimit = speedlimitBar.getProgress() * 1.0f / 1000;
                 ((TextView) findViewById(R.id.speedlimitText)).setText("Speedlimit " + speedlimit);
+                ((ProgressiveGauge) findViewById(R.id.speedometerLimitGauge)).speedTo(speedlimit, 0);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) { }

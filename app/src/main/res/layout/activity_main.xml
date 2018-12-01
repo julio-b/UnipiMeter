@@ -48,6 +48,22 @@
     </android.support.design.widget.AppBarLayout>
 
     <com.github.anastr.speedviewlib.ProgressiveGauge
+        android:id="@+id/speedometerLimitGauge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:sv_lowSpeedPercent="10"
+        app:sv_maxSpeed="220"
+        app:sv_speedTextColor="#00000000"
+        app:sv_speedTextPosition="RIGHT"
+        app:sv_mediumSpeedPercent="25"
+        app:sv_orientation="HORIZONTAL"
+        app:sv_speedometerBackColor="@android:color/holo_red_dark"
+        app:sv_speedometerColor="@android:color/darker_gray"
+        app:sv_unitTextColor="#00000000"
+        app:sv_withTremble="false" />
+
+    <com.github.anastr.speedviewlib.ProgressiveGauge
         android:id="@+id/speedometerGauge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +73,7 @@
         app:sv_speedTextPosition="RIGHT"
         app:sv_mediumSpeedPercent="25"
         app:sv_orientation="HORIZONTAL"
-        app:sv_speedometerBackColor="@android:color/darker_gray"
+        app:sv_speedometerBackColor="#00ffffff"
         app:sv_speedometerColor="@color/colorPrimary"
         app:sv_withTremble="false" />
 
@@ -70,7 +86,7 @@
         android:layout_marginBottom="30dp"
         android:fontFamily="monospace"
         android:text="Speedlimit 40.2"
-        android:textColor="#ff0008"
+        android:textColor="#000000"
         android:textSize="15sp"
         android:textStyle="bold" />
 
