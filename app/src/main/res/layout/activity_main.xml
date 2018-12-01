@@ -139,6 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:translationY="60dp"
         app:layout_anchor="@+id/osmdroid"
         app:layout_anchorGravity="right|center"
         app:srcCompat="?android:attr/actionModeSelectAllDrawable" />
