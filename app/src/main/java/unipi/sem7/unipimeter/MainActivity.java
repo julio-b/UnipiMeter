@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity implements LocationListener , POIFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LocationListener , POIFragment.OnListFragmentInteractionListener, EventsFragment.OnOsListFragmentInteractionListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private AppBarLayout TopBar;
     private ViewPager mViewPager;
@@ -249,6 +249,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         //TODO POI LIST ITEM CLICK
     }
 
+    @Override
+    public void onEosListFragmentInteraction(EventOverSpeed eos) {
+        //TODO overspeed item click
+    }
+
     public void reqGPS() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED){
@@ -341,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 case 0:
                     return POIFragment.newInstance();
                 case 1:
-                    return POIFragment.newInstance();
+                    return EventsFragment.newInstance();
                 default:
                     return POIFragment.newInstance();
             }
