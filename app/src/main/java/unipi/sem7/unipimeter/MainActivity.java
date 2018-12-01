@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private SeekBar speedlimitBar;
     private float speedlimit = 40.2f;
     private boolean ospeedflag = false;
-    private int topLayerVisibility;
+    private int topLayerVisibility = View.INVISIBLE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +74,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         setContentView(R.layout.activity_main);
         TopBar = (AppBarLayout) findViewById(R.id.TopBar);
+        TopBar.setVisibility(topLayerVisibility);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.vpcontainer);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setVisibility(topLayerVisibility);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -96,9 +98,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         locationMarker = new Marker(mMapView);
         locationMarker.setPosition(new GeoPoint(37.941649, 23.652894));
-        locationMarker.setIcon(getResources().getDrawable(R.drawable.ic_menu_mylocation));
-        locationMarker.setAnchor(0.18f, 0.19f);
-        locationMarker.setInfoWindowAnchor(0.18f, 0.0f);
+        locationMarker.setIcon(getResources().getDrawable(R.drawable.center));
+        locationMarker.setAnchor(0.5f, 0.5f);
         locationMarker.setTitle(String.format("%.5f | %.5f", locationMarker.getPosition().getLatitude(), locationMarker.getPosition().getLongitude()));
         locationMarker.setSubDescription("Range: " + (int) distanceM + "m");
 
@@ -137,8 +138,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 distanceM = distanceMBar.getProgress();
-                locationMarker.setSubDescription("Range: " + distanceM);
+                locationMarker.setSubDescription("Range: " + (int) distanceM + "m");
                 circle.setPoints(Polygon.pointsAsCircle(locationMarker.getPosition(), distanceM));
+                onLocationChanged(locFromGeopoin(locationMarker.getPosition()));
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -171,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                distanceMBar.setVisibility(topLayerVisibility);
+                speedlimitBar.setVisibility(topLayerVisibility);
                 topLayerVisibility = topLayerVisibility == View.VISIBLE ? View.INVISIBLE : View.VISIBLE;
                 TopBar.setVisibility(topLayerVisibility);
                 mViewPager.setVisibility(topLayerVisibility);
@@ -313,9 +317,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         for (POI poi : pois) {
             Marker mpoi = new Marker(mMapView);
             mpoi.setPosition(new GeoPoint(poi.location.getLatitude(), poi.location.getLongitude()));
-            mpoi.setIcon(getResources().getDrawable(R.drawable.marker_default));
-            mpoi.setAnchor(0.18f, 0.19f);
-            mpoi.setInfoWindowAnchor(0.18f, 0.0f);
+            mpoi.setDefaultIcon();
             mpoi.setTitle(String.format("%s\n%.5f | %.5f", poi.title, poi.location.getLatitude(), poi.location.getLongitude()));
             mpoi.setSubDescription("Description: " + poi.description + poi.category);
 
@@ -323,6 +325,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             newMarkers.add(mpoi);
         }
         mMapView.getOverlayManager().addAll(newMarkers);
+    }
+
+    public static Location locFromGeopoin(GeoPoint p) {
+        Location location = new Location("none");
+        location.setLatitude(p.getLatitude());
+        location.setLongitude(p.getLongitude());
+        return location;
     }
 
 }

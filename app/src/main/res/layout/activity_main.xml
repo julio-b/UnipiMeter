@@ -102,18 +102,20 @@
         android:id="@+id/distanceSeekBar"
         android:layout_width="230dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
+        android:layout_marginLeft="-100dp"
         android:max="7000"
         android:min="200"
         android:progress="600"
-        android:rotation="270"
         android:progressBackgroundTint="@color/colorPrimaryDark"
         android:progressTint="@color/colorPrimary"
+        android:rotation="270"
         android:thumbTint="@color/colorPrimary"
-        app:layout_anchor="@+id/fab"
-        app:layout_anchorGravity="center" />
+        app:layout_anchor="@+id/osmdroid"
+        app:layout_anchorGravity="left|center" />
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
