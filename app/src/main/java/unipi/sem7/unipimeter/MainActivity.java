@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        reqStoragePermision();
+
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
@@ -268,6 +270,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
+    public void reqStoragePermision() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -280,7 +289,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 }
                 return;
             }
-            //TODO req other permissions
+            default: {
+                return;
+            }
         }
     }
 
