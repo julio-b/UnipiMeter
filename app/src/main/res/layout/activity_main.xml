@@ -58,8 +58,8 @@
         app:sv_speedTextPosition="RIGHT"
         app:sv_mediumSpeedPercent="25"
         app:sv_orientation="HORIZONTAL"
-        app:sv_speedometerBackColor="@android:color/holo_red_dark"
-        app:sv_speedometerColor="@android:color/darker_gray"
+        app:sv_speedometerBackColor="#890000"
+        app:sv_speedometerColor="#999999"
         app:sv_unitTextColor="#00000000"
         app:sv_withTremble="false" />
 

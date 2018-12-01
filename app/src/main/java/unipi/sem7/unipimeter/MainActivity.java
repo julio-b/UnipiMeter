@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         circle = new Polygon();
         circle.setTitle("POI Range");
         circle.setPoints(Polygon.pointsAsCircle(new GeoPoint(37.941649, 23.652894), distanceM));
-        circle.setFillColor(Color.argb(11, 0,255,255));
+        circle.setFillColor(Color.argb(30, 0,255,255));
         circle.setStrokeColor(Color.argb(0,0,0,0));
 
         mMapView.getOverlayManager().add(circle);
