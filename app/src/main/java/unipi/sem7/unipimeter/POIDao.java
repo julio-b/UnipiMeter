@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface POIDao {
 
-    @Query("SELECT * from points_of_interes ORDER BY title ASC")
+    @Query("SELECT * from points_of_interes ORDER BY id ASC")
     public LiveData<List<POI>> getAllPOIs();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
