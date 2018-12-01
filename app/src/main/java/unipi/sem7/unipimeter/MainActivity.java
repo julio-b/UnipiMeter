@@ -26,7 +26,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.github.anastr.speedviewlib.ProgressiveGauge;
@@ -34,6 +36,7 @@ import com.github.anastr.speedviewlib.Speedometer;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -42,6 +45,7 @@ import org.osmdroid.views.CustomZoomButtonsDisplay;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polygon;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private SeekBar speedlimitBar;
     private float speedlimit = 40.2f;
     private boolean ospeedflag = false;
+    private boolean map_follow_location = false;
+    private boolean dark_theme = true;
+    private TilesOverlay lightTilesOverlay;
     private int topLayerVisibility = View.INVISIBLE;
 
     @Override
@@ -123,13 +130,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         });
         POIMarkers = new HashMap<POI, Marker>();
 
-        final ITileSource tileSource = new XYTileSource( "Dark", 1, 18, 256, ".png",
+        final ITileSource darkTileSource = new XYTileSource( "Dark", 1, 18, 256, ".png",
                 new String[] {
                         "https://a.basemaps.cartocdn.com/dark_all/",
                         "https://b.basemaps.cartocdn.com/dark_all/",
                         "https://c.basemaps.cartocdn.com/dark_all/",
                         "https://d.basemaps.cartocdn.com/dark_all/" });
-        mMapView.setTileSource(tileSource);
+        mMapView.setTileSource(darkTileSource);
+
+        final MapTileProviderBasic lightTileProvider = new MapTileProviderBasic(getApplicationContext());
+        lightTileProvider.setTileSource(new XYTileSource( "Light", 1, 18, 256, ".png",
+                new String[] {
+                        "https://a.basemaps.cartocdn.com/light_all/",
+                        "https://b.basemaps.cartocdn.com/light_all/",
+                        "https://c.basemaps.cartocdn.com/light_all/",
+                        "https://d.basemaps.cartocdn.com/light_all/" }));
+        lightTilesOverlay = new TilesOverlay(lightTileProvider, this.getBaseContext());
+        lightTilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         reqGPS();
@@ -189,6 +206,32 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.dark_theme);
+
+        // switch light map theme
+        Switch swi = item.getActionView().findViewById(R.id.item_swith);
+        swi.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                dark_theme = isChecked;
+                if (dark_theme)
+                    mMapView.getOverlays().remove(lightTilesOverlay);
+                else
+                    mMapView.getOverlays().add(0, lightTilesOverlay);
+                mMapView.invalidate();
+            }
+        });
+
+        // follow user location
+        item = menu.findItem(R.id.map_follow_location);
+        swi = item.getActionView().findViewById(R.id.item_swith);
+        swi.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+               map_follow_location = isChecked;
+            }
+        });
+
         return true;
     }
 
@@ -198,12 +241,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -240,10 +277,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onLocationChanged(Location location) {
         GeoPoint lgp = new GeoPoint(location.getLatitude(), location.getLongitude());
-        mMapView.getController().setCenter(lgp);
         locationMarker.setPosition(lgp);
         locationMarker.setTitle(String.format("%.5f | %.5f", lgp.getLatitude(), lgp.getLongitude()));
         circle.setPoints(Polygon.pointsAsCircle(lgp, distanceM));
+        if (map_follow_location)
+            mMapView.getController().setCenter(lgp);
         if (location.hasSpeed()) {
             speedometerGauge.speedTo(location.getSpeed());
             // save overspeed event only once
