@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private SeekBar distanceMBar;
     private double distanceM = 300f;
     private SeekBar speedlimitBar;
-    private float speedlimit = 40.2f;
+    private float speedlimit = 140.2f;
     private boolean ospeedflag = false;
     private boolean map_follow_location = false;
     private boolean dark_theme = true;

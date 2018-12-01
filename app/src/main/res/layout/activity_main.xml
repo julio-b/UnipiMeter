@@ -85,7 +85,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="30dp"
         android:fontFamily="monospace"
-        android:text="Speedlimit 40.2"
+        android:text="Speedlimit 140.2"
         android:textColor="#000000"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -103,7 +103,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginBottom="0dp"
         android:max="220000"
-        android:progress="40200"
+        android:progress="140200"
         android:padding="0dp"
         android:paddingStart="0dp"
         android:paddingLeft="0dp"
