@@ -47,6 +47,8 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.TilesOverlay;
 
+import unipi.sem7.unipimeter.EventApproachingPOIDoa.EventApproachingPOIjoined;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -267,12 +269,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @Override
-    public void onEapListFragmentIntercation(EventApproachingPOI eap) {
-        eventMarker.setPosition(new GeoPoint(eap.location.getLatitude(), eap.location.getLongitude()));
+    public void onEapListFragmentIntercation(EventApproachingPOIjoined eapjpoi) {
+        eventMarker.setPosition(new GeoPoint(eapjpoi.eap.location.getLatitude(), eapjpoi.eap.location.getLongitude()));
         eventMarker.setIcon(getResources().getDrawable(R.drawable.person));
         eventMarker.setAnchor(0.5f, 1.0f);
-        eventMarker.setSnippet("Approaching POI event");
-        eventMarker.setTitle(String.format("%.5f | %.5f", eap.location.getLatitude(), eap.location.getLongitude()));
+        eventMarker.setTitle("Approaching " + eapjpoi.poi.title);
+        eventMarker.setSnippet(String.format("Distance: %.3f km", eapjpoi.poi.location.distanceTo(eapjpoi.eap.location) / 1000.0));
+        eventMarker.setSubDescription(String.format("%.5f | %.5f", eapjpoi.eap.location.getLatitude(), eapjpoi.eap.location.getLongitude()));
         mMapView.getController().animateTo(eventMarker.getPosition());
         eventMarker.showInfoWindow();
     }

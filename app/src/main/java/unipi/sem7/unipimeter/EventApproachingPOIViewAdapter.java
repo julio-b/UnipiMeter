@@ -39,7 +39,7 @@ public class EventApproachingPOIViewAdapter extends RecyclerView.Adapter<EventAp
             holder.eapjpoi = eapjpoi;
             EventApproachingPOI eap = eapjpoi.eap;
             POI poi = eapjpoi.poi;
-            holder.eapPOI.setText(poi.title);
+            holder.eapPOI.setText(String.format("%s (%.3f km)", poi.title, poi.location.distanceTo(eap.location)/1000.0));
             holder.eapTime.setText(EventOverSpeedViewAdapter.df.format(eap.date));
             holder.eapLon.setText((""+eap.location.getLongitude()));
             holder.eapLat.setText((""+eap.location.getLatitude()));
@@ -48,7 +48,7 @@ public class EventApproachingPOIViewAdapter extends RecyclerView.Adapter<EventAp
                 @Override
                 public void onClick(View v) {
                     if (null != mListener) {
-                        mListener.onEapListFragmentIntercation(holder.eapjpoi.eap);
+                        mListener.onEapListFragmentIntercation(holder.eapjpoi);
                     }
                 }
             });

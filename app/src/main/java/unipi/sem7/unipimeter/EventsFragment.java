@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import unipi.sem7.unipimeter.EventApproachingPOIDoa.EventApproachingPOIjoined;
+
 import java.util.List;
 
 
@@ -98,6 +100,6 @@ public class EventsFragment extends Fragment {
 
     public interface OnOsListFragmentInteractionListener {
         void onEosListFragmentInteraction(EventOverSpeed eos);
-        void onEapListFragmentIntercation(EventApproachingPOI eap);
+        void onEapListFragmentIntercation(EventApproachingPOIjoined eapjpoi);
     }
 }
