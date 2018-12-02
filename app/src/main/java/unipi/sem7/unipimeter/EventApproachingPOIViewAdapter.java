@@ -17,7 +17,7 @@ public class EventApproachingPOIViewAdapter extends RecyclerView.Adapter<EventAp
 
     private final List<EventApproachingPOIjoined> mValues;
     private final OnOsListFragmentInteractionListener mListener;
-    public static SimpleDateFormat df = new SimpleDateFormat("EEE d MMM yyyy");
+    public static SimpleDateFormat df = new SimpleDateFormat("EEE d MMM yyyy HH:mm");
 
     public EventApproachingPOIViewAdapter(List<EventApproachingPOIjoined> items, OnOsListFragmentInteractionListener listener) {
         mValues = items;

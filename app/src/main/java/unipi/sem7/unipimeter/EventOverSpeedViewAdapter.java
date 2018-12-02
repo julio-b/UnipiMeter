@@ -16,7 +16,7 @@ public class EventOverSpeedViewAdapter extends RecyclerView.Adapter<EventOverSpe
 
     private final List<EventOverSpeed> mValues;
     private final OnOsListFragmentInteractionListener mListener;
-    public static SimpleDateFormat df = new SimpleDateFormat("EEE d MMM yyyy");
+    public static SimpleDateFormat df = new SimpleDateFormat("EEE d MMM yyyy HH:mm");
 
     public EventOverSpeedViewAdapter(List<EventOverSpeed> items, OnOsListFragmentInteractionListener listener) {
         mValues = items;
