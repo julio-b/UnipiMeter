@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private LocationManager locationManager;
     private Map<POI, Marker> POIMarkers;
     private Marker locationMarker;
+    private Marker eventMarker;
     private Polygon circle;
     private SeekBar distanceMBar;
     private double distanceM = 300f;
@@ -114,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         locationMarker.setSnippet("<small><i>your location</i></small>");
         locationMarker.setSubDescription("Range: " + (int) distanceM + "m");
 
+        eventMarker = new Marker(mMapView);
+
         circle = new Polygon();
         circle.setTitle("POI Range");
         circle.setPoints(Polygon.pointsAsCircle(new GeoPoint(37.941649, 23.652894), distanceM));
@@ -122,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         mMapView.getOverlayManager().add(circle);
         mMapView.getOverlays().add(locationMarker);
+        mMapView.getOverlays().add(eventMarker);
         //mMapView.invalidate();
 
         POIDao poiDao = (POIDao) AppDatabase.getDatabase(getApplicationContext()).poiDao();
@@ -249,17 +253,28 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onListFragmentInteraction(POI poi){
-        //TODO POI LIST ITEM CLICK
+        mMapView.getController().setCenter(new GeoPoint(poi.location.getLatitude(), poi.location.getLongitude()));
     }
 
     @Override
     public void onEosListFragmentInteraction(EventOverSpeed eos) {
-        //TODO overspeed item click
+        eventMarker.setPosition(new GeoPoint(eos.location.getLatitude(), eos.location.getLongitude()));
+        eventMarker.setTextIcon(String.format("%.2f km/h", eos.speed));
+        eventMarker.setSnippet("Overspeed event");
+        eventMarker.setTitle(String.format("%.5f | %.5f", eos.location.getLatitude(), eos.location.getLongitude()));
+        mMapView.getController().animateTo(eventMarker.getPosition());
+        eventMarker.showInfoWindow();
     }
 
     @Override
     public void onEapListFragmentIntercation(EventApproachingPOI eap) {
-        //TODO
+        eventMarker.setPosition(new GeoPoint(eap.location.getLatitude(), eap.location.getLongitude()));
+        eventMarker.setIcon(getResources().getDrawable(R.drawable.person));
+        eventMarker.setAnchor(0.5f, 1.0f);
+        eventMarker.setSnippet("Approaching POI event");
+        eventMarker.setTitle(String.format("%.5f | %.5f", eap.location.getLatitude(), eap.location.getLongitude()));
+        mMapView.getController().animateTo(eventMarker.getPosition());
+        eventMarker.showInfoWindow();
     }
 
     public void reqGPS() {

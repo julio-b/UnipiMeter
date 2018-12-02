@@ -42,8 +42,6 @@ public class POIRecyclerViewAdapter extends RecyclerView.Adapter<POIRecyclerView
             holder.poiLon.setText((""+poi.location.getLongitude()));
             holder.poiLat.setText((""+poi.location.getLatitude()));
 
-            ///location long lat todo
-
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
