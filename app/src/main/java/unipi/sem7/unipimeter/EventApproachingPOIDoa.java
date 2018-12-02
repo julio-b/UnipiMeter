@@ -12,13 +12,13 @@ import java.util.List;
 
 @Dao
 public interface EventApproachingPOIDoa {
-    @Query("SELECT * from EventApproachingPOI ORDER BY eap_id ASC")
+    @Query("SELECT * from EventApproachingPOI ORDER BY eap_id DESC")
     public LiveData<List<EventApproachingPOI>> getAllApproachingPOIs();
 
     @Query("SELECT * from EventApproachingPOI WHERE eap_id = (SELECT MAX(eap_id)  FROM EventApproachingPOI);")
     public EventApproachingPOI getLast();
 
-    @Query("SELECT EAP.*, POI.* from EventApproachingPOI AS EAP INNER JOIN points_of_interes AS POI ON EAP.poiId=POI.id ORDER BY EAP.eap_id ASC")
+    @Query("SELECT EAP.*, POI.* from EventApproachingPOI AS EAP INNER JOIN points_of_interes AS POI ON EAP.poiId=POI.id ORDER BY EAP.eap_id DESC")
     public LiveData<List<EventApproachingPOIjoined>> getAllApproachingPOIJoined();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Dao
 public interface EventOverSpeedDao {
-    @Query("SELECT * from EventOverSpeed ORDER BY id ASC")
+    @Query("SELECT * from EventOverSpeed ORDER BY id DESC")
     public LiveData<List<EventOverSpeed>> getAllOverSpeed();
 
     @Query("SELECT * from EventOverSpeed WHERE ID = (SELECT MAX(ID)  FROM EventOverSpeed);")
