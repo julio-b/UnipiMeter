@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         locationMarker.setIcon(getResources().getDrawable(R.drawable.center));
         locationMarker.setAnchor(0.5f, 0.5f);
         locationMarker.setTitle(String.format("%.5f | %.5f", locationMarker.getPosition().getLatitude(), locationMarker.getPosition().getLongitude()));
+        locationMarker.setSnippet("<small><i>your location</i></small>");
         locationMarker.setSubDescription("Range: " + (int) distanceM + "m");
 
         circle = new Polygon();
@@ -382,8 +383,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             Marker mpoi = new Marker(mMapView);
             mpoi.setPosition(new GeoPoint(poi.location.getLatitude(), poi.location.getLongitude()));
             mpoi.setDefaultIcon();
-            mpoi.setTitle(String.format("%s\n%.5f | %.5f", poi.title, poi.location.getLatitude(), poi.location.getLongitude()));
-            mpoi.setSubDescription("Description: " + poi.description + poi.category);
+            mpoi.setTitle(String.format("%s", poi.title,  poi.category));
+            mpoi.setSnippet(String.format("<b>%s</b><br>------------<br>%.5f | %.5f", poi.category, poi.location.getLatitude(), poi.location.getLongitude()));
 
             POIMarkers.put(poi, mpoi);
             newMarkers.add(mpoi);
