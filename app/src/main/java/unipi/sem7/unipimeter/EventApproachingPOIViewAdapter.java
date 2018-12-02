@@ -78,8 +78,8 @@ public class EventApproachingPOIViewAdapter extends RecyclerView.Adapter<EventAp
             mView = view;
             eapPOI = (TextView) view.findViewById(R.id.eapPOI);
             eapTime = (TextView) view.findViewById(R.id.eapTime);
-            eapLon = (TextView) view.findViewById(R.id.eapLat);
-            eapLat = (TextView) view.findViewById(R.id.eapLon);
+            eapLon = (TextView) view.findViewById(R.id.eapLon);
+            eapLat = (TextView) view.findViewById(R.id.eapLat);
         }
     }
 }

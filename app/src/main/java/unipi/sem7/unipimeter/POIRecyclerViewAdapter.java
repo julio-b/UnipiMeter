@@ -82,7 +82,7 @@ public class POIRecyclerViewAdapter extends RecyclerView.Adapter<POIRecyclerView
             poiTitle = (TextView) view.findViewById(R.id.poiTitle);
             poiDesc = (TextView) view.findViewById(R.id.poiDesc);
             poiCategory = (TextView) view.findViewById(R.id.poiCategory);
-            poiLon = (TextView) view.findViewById(R.id.poiLocation);
+            poiLon = (TextView) view.findViewById(R.id.poiLon);
             poiLat = (TextView) view.findViewById(R.id.poiLat);
         }
 
