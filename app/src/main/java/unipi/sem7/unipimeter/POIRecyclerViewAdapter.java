@@ -36,7 +36,7 @@ public class POIRecyclerViewAdapter extends RecyclerView.Adapter<POIRecyclerView
         if (mValues != null) {
             POI poi = mValues.get(position);
             holder.poi = poi;
-            holder.poiTitle.setText(poi.id + " " + poi.title);
+            holder.poiTitle.setText("" + poi.title);
             holder.poiDesc.setText(poi.description);
             holder.poiCategory.setText(poi.category);
             holder.poiLon.setText((""+poi.location.getLongitude()));
