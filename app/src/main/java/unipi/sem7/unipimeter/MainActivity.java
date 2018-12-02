@@ -354,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 marker.showInfoWindow();
             }
         }
+        mMapView.invalidate();
     }
 
     @Override
