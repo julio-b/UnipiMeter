@@ -323,15 +323,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (map_follow_location)
             mMapView.getController().setCenter(lgp);
         if (location.hasSpeed()) {
-            speedometerGauge.speedTo(location.getSpeed());
+            float speed_khm = location.getSpeed() * 3.6f;
+            speedometerGauge.speedTo(speed_khm);
             // save overspeed event only once
-            if (!ospeedflag && location.getSpeed() > speedlimit) {
+            if (!ospeedflag && speed_khm > speedlimit) {
                 ((EventOverSpeedDao) AppDatabase.getDatabase(getApplicationContext()).overspeedDao()).insertOverSpeed(
-                        new EventOverSpeed(location.getSpeed(), speedlimit, location)
+                        new EventOverSpeed(speed_khm, speedlimit, location)
                 );
             }
 
-            ospeedflag = location.getSpeed() > speedlimit;
+            ospeedflag = speed_khm > speedlimit;
         }
         for (Map.Entry<POI, Marker> entry : POIMarkers.entrySet()) {
             POI poi = entry.getKey();
