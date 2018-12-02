@@ -37,6 +37,6 @@ public class EventOverSpeed {
 
     @Ignore
     public EventOverSpeed(float speed, float speedLimit, Location location) {
-        this(speed, speedLimit, new Location("db"), new Date());
+        this(speed, speedLimit, location, new Date());
     }
 }
